@@ -1,4 +1,5 @@
 import sys
+sys.path.insert(0, '/tables')
 
 from flow import Flow
 
@@ -18,6 +19,9 @@ def main():
     session = Session()
     metadata.reflect(engine)
 
+    for table in metadata.tables.values():
+        print (table.name)
+
     #flow_table = Table('flow', metadata, autoload=True, autoload_with=engine)
     #print (flow_table.name)
 
@@ -26,8 +30,9 @@ def main():
 
     #ses.close()
 
-    flow_res = session.query(Flow).first()
-    print (flow_res.flowid, flow_res.sessionid)
+    flow_res = session.query(Flow).limit(5).all()
+    for item in flow_res:
+        print (item.flowid, item.sessionid)
 
 if __name__ == "__main__":
     main()
