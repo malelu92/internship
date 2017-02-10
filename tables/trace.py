@@ -19,6 +19,6 @@ def loadSession():
 
 if __name__ == "__main__":
     session = loadSession()
-#    trace_res = session.query(Trace).limit(5).all()
-#    for item in trace_res:
-#        print(item.usermac)
+    trace_res = session.query(Trace).limit(5).all()
+    for item in trace_res:
+        print(item.usermac)

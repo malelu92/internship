@@ -31,13 +31,13 @@ def main():
 
     #ses.close()
 
-    flow_res = session.query(Flow).limit(4).all()
-    for item in flow_res:
-        print (item.flowid, item.sessionid)
+    #flow_res = session.query(Flow).limit(4).all()
+    #for item in flow_res:
+    #    print (item.flowid, item.sessionid)
 
-    #trace_res = session.query(Trace).limit(5).all()
-    #for item in trace_res:
-    #    print (item.usermac)
+    trace_res = session.query(Trace).limit(5).all()
+    for item in trace_res:
+        print (item.usermac)
 
     session.close()
 
