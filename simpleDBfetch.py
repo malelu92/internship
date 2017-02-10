@@ -1,5 +1,7 @@
 import sys
 
+from flow import Flow
+
 from sqlalchemy import create_engine
 from sqlalchemy import MetaData
 from sqlalchemy import Table
@@ -13,23 +15,20 @@ def main():
     Session = sessionmaker(bind=engine)
     metadata = MetaData()
 
-    ses = Session()
+    session = Session()
     metadata.reflect(engine)
-    #for table in metadata.tables.values():
-    #    if table.name == "flow":
-    #        for column in table.c:
-    #            print column.name
-    
-    flow_table = Table('flow', metadata, autoload=True, autoload_with=engine)
-    print (flow_table.name)
 
-   # flowid = select([flowtable.c.flowid])
-   # print (flowid[0], flowid[1])
+    #flow_table = Table('flow', metadata, autoload=True, autoload_with=engine)
+    #print (flow_table.name)
 
     #for column in flow_table.c:
     #    print (column.name)
 
-    ses.close()
+    #ses.close()
+
+    #flow_user = Flow()
+    flow_res = session.query(Flow).first()
+    print (flow_res.flowid, flow_res.sessionid)
 
 if __name__ == "__main__":
     main()

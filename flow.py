@@ -17,8 +17,8 @@ def loadSession():
     Session = sessionmaker(bind=engine)
     return Session()
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
     session = loadSession()
-    res = session.query(Flow).first()
-    print (res.flowid, res.sessionid)
+    #res = session.query(Flow).first()
+    #print (res.flowid, res.sessionid)
     
