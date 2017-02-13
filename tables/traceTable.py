@@ -7,7 +7,7 @@ DB = 'postgresql+psycopg2:///hostview'
 engine = create_engine(DB, echo=False, poolclass=NullPool)
 Base = declarative_base(engine)
 
-class Trace(Base):
+class TraceTable(Base):
     __tablename__ = 'trace'
     __table_args__ = {'autoload':True}
 
@@ -19,6 +19,6 @@ def loadSession():
 
 if __name__ == "__main__":
     session = loadSession()
-    trace_res = session.query(Trace).limit(5).all()
+    trace_res = session.query(TraceTable).limit(5).all()
     for item in trace_res:
         print(item.usermac)

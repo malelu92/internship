@@ -2,12 +2,11 @@ import sys
 sys.path.append('tables')
 
 from flow import Flow
-from trace import Trace
+from traceTable import TraceTable
 from session import Session
 
 from sqlalchemy import create_engine
 from sqlalchemy import MetaData
-from sqlalchemy import Table
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 
@@ -32,14 +31,17 @@ def main():
 
     #ses.close()
 
-    #flow_res = dbsession.query(Flow).limit(4).all()
-    #for item in flow_res:
-    #    print (item.flowid, item.sessionid)
+    print ("flow info")
+    flow_res = dbsession.query(Flow).limit(4).all()
+    for item in flow_res:
+        print (item.flowid, item.sessionid)
 
-    #trace_res = dbsession.query(Trace).limit(5).all()
-    #for item in trace_res:
-    #    print (item.usermac)
+    print ("trace info") 
+    trace_res = dbsession.query(TraceTable).limit(5).all()
+    for item in trace_res:
+        print (item.usermac)
 
+    print ("session info")
     session_res = dbsession.query(Session).limit(3).all()
     for item in session_res:
         print (item.sessionid, item.starttime, item.endtime)
