@@ -3,6 +3,7 @@ sys.path.append('tables')
 
 from flow import Flow
 from trace import Trace
+from session import Session
 
 from sqlalchemy import create_engine
 from sqlalchemy import MetaData
@@ -14,10 +15,10 @@ from sqlalchemy.pool import NullPool
 def main():
     DB = 'postgresql+psycopg2:///hostview'
     engine = create_engine(DB, echo=False, poolclass=NullPool)
-    Session = sessionmaker(bind=engine)
+    DBSession = sessionmaker(bind=engine)
     metadata = MetaData()
 
-    session = Session()
+    dbsession = DBSession()
     metadata.reflect(engine)
 
     #for table in metadata.tables.values():
@@ -31,15 +32,19 @@ def main():
 
     #ses.close()
 
-    #flow_res = session.query(Flow).limit(4).all()
+    #flow_res = dbsession.query(Flow).limit(4).all()
     #for item in flow_res:
     #    print (item.flowid, item.sessionid)
 
-    trace_res = session.query(Trace).limit(5).all()
-    for item in trace_res:
-        print (item.usermac)
+    #trace_res = dbsession.query(Trace).limit(5).all()
+    #for item in trace_res:
+    #    print (item.usermac)
 
-    session.close()
+    session_res = dbsession.query(Session).limit(3).all()
+    for item in session_res:
+        print (item.sessionid, item.starttime, item.endtime)
+
+    dbsession.close()
 
 if __name__ == "__main__":
     main()
