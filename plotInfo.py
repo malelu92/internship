@@ -9,6 +9,7 @@ matplotlib.style.use('ggplot')
 sys.path.append('tables')
 
 from session import Session
+from traceTable import TraceTable
 
 from sqlalchemy import and_
 from sqlalchemy import create_engine
@@ -26,21 +27,19 @@ def main():
     metadata.reflect(engine)
 
     session_res = dbsession.query(Session).filter(\
-                                                  Session.starttime >= '2011-01-04',\
-                                                  Session.starttime <= '2011-01-05').filter(\
-                                                                                            Session.userid >= '56135a80-0000-0000-0000-000000000000',\
-                                                                                            Session.userid <=  '56135a80-ffff-ffff-ffff-ffffffffffff')
+                    Session.starttime >= '2011-01-03',\
+                    Session.starttime <= '2011-01-09').filter(\
+                        Session.userid >= '56135a80-0000-0000-0000-000000000000',\
+                        Session.userid <=  '56135a80-ffff-ffff-ffff-ffffffffffff').order_by(\
+                                                                                            Session.sessionid)
 
     with open('userInfo.csv', 'wb') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
-        #writer.writerow(['la la']*5)
         for item in session_res:
-            writer.writerow([item.sessionid])
-        #print (item.sessionid, item.starttime, item.endtime)
-
-#    ts = pd.Series(np.random.rand(1000), index=pd.date_range('1/1/2000', periods=1000))
-#    ts = ts.cumsum()
-#    ts.plot()
+            resultTime = item.endtime - item.starttime
+            #writer.writerow([item.sessionid]+[item.starttime]+[item.endtime])
+            #print (item.sessionid, item.starttime, item.endtime)
+            writer.writerow([item.starttime] + [item.endtime] + [resultTime])
 
     dbsession.close()
 
