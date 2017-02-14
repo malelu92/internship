@@ -21,8 +21,8 @@ def main():
     dbsession = DBSession()
     metadata.reflect(engine)
 
-    #for table in metadata.tables.values():
-    #    print (table.name)
+    for table in metadata.tables.values():
+        print (table.name)
 
     #flow_table = Table('flow', metadata, autoload=True, autoload_with=engine)
     #print (flow_table.name)
@@ -32,30 +32,30 @@ def main():
 
     #ses.close()
 
-    print ("flow info")
-    flow_res = dbsession.query(Flow).limit(4).all()
-    for item in flow_res:
-        print (item.flowid, item.sessionid)
-    col_names = Flow.__table__.columns.keys()
-    for column in col_names:
-        print (column)
+   ## print ("flow info")
+    #flow_res = dbsession.query(Flow).limit(4).all()
+    #for item in flow_res:
+    #    print (item.flowid, item.sessionid)
+    #col_names = Flow.__table__.columns.keys()
+    #for column in col_names:
+    #    print (column)
 
-    print ("trace info") 
-    trace_res = dbsession.query(TraceTable).limit(5).all()
-    for item in trace_res:
-        print (item.usermac)
+    #print ("trace info") 
+    #trace_res = dbsession.query(TraceTable).limit(5).all()
+    #for item in trace_res:
+    #    print (item.usermac)
 
-    print ("session info")
-    session_res = dbsession.query(Session).limit(3).all()
-    for item in session_res:
-        print (item.sessionid, item.starttime, item.endtime)
+print ("session info")
+session_res = dbsession.query(Session).filter(and_(Session.starttime <= '2011-01-04', Session.starttime >= '2011-01-10'))
+for item in session_res:
+    print (item.sessionid, item.starttime, item.endtime)
 
-    print ("tsjitter info")
-    tsjitter_res = dbsession.query(Tsjitter).limit(2).all()
-    for item in tsjitter_res:
-        print (item.jitterid)
+#    print ("tsjitter info")
+#    tsjitter_res = dbsession.query(Tsjitter).limit(2).all()
+#    for item in tsjitter_res:
+#        print (item.jitterid)
 
-    dbsession.close()
+dbsession.close()
 
 if __name__ == "__main__":
     main()
