@@ -27,8 +27,8 @@ def main():
     metadata.reflect(engine)
 
     session_res = dbsession.query(Session).filter(\
-                    Session.starttime >= '2011-01-03',\
-                    Session.starttime <= '2011-01-09').filter(\
+                    Session.starttime >= '2011-02-01',\
+                    Session.starttime <= '2011-02-28').filter(\
                         Session.userid >= '56135a80-0000-0000-0000-000000000000',\
                         Session.userid <=  '56135a80-ffff-ffff-ffff-ffffffffffff').order_by(\
                                                                                             Session.sessionid)
