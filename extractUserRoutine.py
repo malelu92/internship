@@ -5,6 +5,7 @@ from flow import Flow
 from traceTable import TraceTable
 from session import Session
 from environment import Environment
+from keyevent import Keyevent
 #from envid_sessionid import Envid_sessionid
 
 from sqlalchemy import create_engine
@@ -22,23 +23,12 @@ def main():
     dbsession = DBSession()
     metadata.reflect(engine)
 
-    sql = text('select * from session limit 10')
+    sql = text('select * from session, keyevent where session.sessionid = keyevent.sessionid and session.userid between \'5749374a-0000-0000-0000-000000000000\' and \'5749374a-ffff-ffff-ffff-ffffffffffff\' limit 10')
     result = dbsession.execute(sql)
 
+    print ("          sessionid        envid         userid       mouse_key")
     for item in result:
-        print (item.sessionid)
-
-   # env_res = dbsession.query(Environment, Envid_sessionid).filter(
-   #     Environment.userid >= '5749374a-0000-0000-0000-000000000000',
-   #     Environment.userid <= '5749374a-ffff-ffff-ffff-ffffffffffff').filter(
-   #         Envid_sessionid.envid == Environment.envid)
-           
-
-    #env_res2 = dbsession.query(env_res, Envid_sessionid).filter(env_res.
-
-    #for item in env_res:
-    #    print (item.sessionid, item.envid, item.hardwareport, item.sourcetype)
-                                                
+        print (item.sessionid, item.envid, item.userid, item.mouse_key)
                                                                               
     dbsession.close()
 
