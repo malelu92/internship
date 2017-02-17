@@ -23,12 +23,12 @@ def main():
     dbsession = DBSession()
     metadata.reflect(engine)
 
-    sql = text('select * from session, keyevent where session.sessionid = keyevent.sessionid and session.userid between \'5749374a-0000-0000-0000-000000000000\' and \'5749374a-ffff-ffff-ffff-ffffffffffff\' limit 10')
+    sql = text('select distinct * from session, keyevent where session.sessionid = keyevent.sessionid and session.userid between \'5749374a-0000-0000-0000-000000000000\' and \'5749374a-ffff-ffff-ffff-ffffffffffff\' limit 10')
     result = dbsession.execute(sql)
 
     print ("          sessionid        envid         userid       mouse_key")
     for item in result:
-        print (item.sessionid, item.envid, item.userid, item.mouse_key)
+        print (item.sessionid, item.envid, item.starttime, item.mouse_key)
                                                                               
     dbsession.close()
 
