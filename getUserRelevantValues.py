@@ -20,12 +20,22 @@ def main():
     dbsession = DBSession()
     metadata.reflect(engine)
 
+    #get users with a lot and just a few session info
     sql = text('select userid from session group by userid having count(userid) > 300;')
+    sql2 = text('select userid from session group by userid having count(userid) <= 300;')
 
     result = dbsession.execute(sql)
+    result2 = dbsession.execute(sql2)
 
     for item in result:
-        print item.userid
+        sqlPerUser = text('select * from session where userid =:user')
+        sqlPerUser = sqlPerUser.bindparams(user = item.userid)
+        resultPerUser = dbsession.execute(sqlPerUser)
+        for session in resultPerUser:
+            print session.userid
+
+#    for item in result2:
+#        print item.userid
 
 
     dbsession.close()
