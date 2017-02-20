@@ -28,11 +28,15 @@ def main():
     result2 = dbsession.execute(sql2)
 
     for item in result:
-        sqlPerUser = text('select * from session where userid =:user')
-        sqlPerUser = sqlPerUser.bindparams(user = item.userid)
+        sqlPerUser = text('select * from session where userid =:user').bindparams(user = item.userid)
         resultPerUser = dbsession.execute(sqlPerUser)
-        for session in resultPerUser:
-            print session.userid
+        
+        usermacLines = 0
+        for userSession in resultPerUser:
+            if (userSession.usermac != None):
+                usermacLines = usermacLines + 1
+             #   print (userSession.userid)
+        print (item.userid, usermacLines)
 
 #    for item in result2:
 #        print item.userid
