@@ -1,8 +1,8 @@
 import sys
 sys.path.append('tables')
 
+from environment import Environment
 from flow import Flow
-from traceTable import TraceTable
 from session import Session
 
 from sqlalchemy import create_engine
@@ -27,9 +27,9 @@ def main():
     result = dbsession.execute(sql)
     result2 = dbsession.execute(sql2)
 
-    evaluateUsersWithManySessions (result, dbsession)
+    evaluateUsersWithManySessions(result, dbsession)
 
-    evaluateUsersWithFewSessions(result2, dbsession)
+    #evaluateUsersWithFewSessions(result2, dbsession)
 
     dbsession.close()
 
@@ -39,12 +39,38 @@ def evaluateUsersWithManySessions (result, dbsession):
         sqlSessionPerUser = text('select * from session where userid =:user').bindparams(user = item.userid)
         resultSessionPerUser = dbsession.execute(sqlSessionPerUser)
 
-        usermacLines = 0
-        for userSession in resultSessionPerUser:
-            if (userSession.usermac != None):
-                usermacLines = usermacLines + 1
-             #   print (userSession.userid)
-        print (item.userid, usermacLines)
+        evaluateUserEnvironment(item.userid, dbsession)
+        break
+
+#        usermacLines = evaluateMacAddress(resultSessionPerUser)
+#        print (item.userid, usermacLines)
+
+def evaluateUserEnvironment(userid, dbsession):
+    sql = text('select distinct session.sessionid, session.starttime, session.endtime, environment.sourcetype from session, environment where session.envid = environment.envid and session.userid =:user and environment.sourcetype is not NULL order by session.sessionid;').bindparams(user = userid)
+
+    result = dbsession.execute(sql)
+
+    for item in result:
+        if (item.sourcetype == "Home"):
+            key = 1;
+        elif (item.sourcetype == "Conference/meeting"):
+            key = 2;
+        elif (item.sourcetype == "Work"):
+            key = 3;
+        else:
+            key = 4;
+
+        resultTime = item.endtime - item.starttime
+        print(item.sessionid, item.starttime, item.sourcetype, key)
+        #writer.writerow([item.sessionid] + [item.starttime] + [item.endtime] + [resultTime] + [item.sourcetype] + [key])
+
+def evaluateMacAddress (resultSessionPerUser):
+    usermacLines = 0
+    for userSession in resultSessionPerUser:
+        if (userSession.usermac != None):
+            usermacLines = usermacLines + 1
+    return usermacLines
+    
 
 def evaluateUsersWithFewSessions (result, dbsession):
     #evaluate users with few sessions
