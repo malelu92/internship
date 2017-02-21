@@ -27,11 +27,18 @@ def main():
     result = dbsession.execute(sql)
     result2 = dbsession.execute(sql2)
 
-    #evaluate users with many sessions
+    evaluateUsersWithManySessions (result, dbsession)
+
+    evaluateUsersWithFewSessions(result2, dbsession)
+
+    dbsession.close()
+
+
+def evaluateUsersWithManySessions (result, dbsession):
     for item in result:
         sqlSessionPerUser = text('select * from session where userid =:user').bindparams(user = item.userid)
         resultSessionPerUser = dbsession.execute(sqlSessionPerUser)
-        
+
         usermacLines = 0
         for userSession in resultSessionPerUser:
             if (userSession.usermac != None):
@@ -39,17 +46,15 @@ def main():
              #   print (userSession.userid)
         print (item.userid, usermacLines)
 
+def evaluateUsersWithFewSessions (result, dbsession):
     #evaluate users with few sessions
-    for item in result2:
+    for item in result:
         #will analyse flows
         sqlFlowPerUser = text('select * from session, flow where userid =:user and session.sessionid = flow.sessionid').bindparams(user = item.userid)
         resultFlowPerUser = dbsession.execute(sqlFlowPerUser)
         for userFlow in resultFlowPerUser:
             print (userFlow.userid, userFlow.remoteport)
         #print item.userid
-
-
-    dbsession.close()
 
 if __name__ == "__main__":
     main()
